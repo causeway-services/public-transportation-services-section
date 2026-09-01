@@ -1,0 +1,59 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { verifyWebReleaseDirectory } from "@red-cup-engineering/web-release-candidate-service";
+import worker from "../src/index.mjs";
+
+const publicUrl = (name) => new URL(`../public/${name}`, import.meta.url);
+const assets = { async fetch(request) {
+  const path = new URL(request.url).pathname === "/" ? "index.html" : new URL(request.url).pathname.slice(1);
+  try { return new Response(await readFile(publicUrl(path)), { status: 200 }); }
+  catch { return new Response("Not found", { status: 404 }); }
+} };
+
+test("site carrier exposes the public service", async () => {
+  const response = await worker.fetch(new Request("https://north-shore-scenic-railroad-service.561.group/healthz"), { ASSETS: assets });
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).service, "north-shore-window");
+});
+
+test("site carrier delegates browser artifacts to the existing assets seam", async () => {
+  const response = await worker.fetch(new Request("https://north-shore-scenic-railroad-service.561.group/"), { ASSETS: assets });
+  assert.equal(response.status, 200);
+  assert.match(await response.text(), /North Shore Window/);
+});
+
+test("offline bundle contains every core artifact, its citations, and parseable browser modules", async () => {
+  const workerSource = await readFile(publicUrl("service-worker.js"), "utf8");
+  for (const path of ["/", "/app.js", "/tufte-browser.mjs", "/route-position-projection.mjs", "/route-ride-tracker.mjs", "/api/route", "/manifest.webmanifest", "/icon.svg"]) assert.match(workerSource, new RegExp(path.replace(/[/.]/g, "\\$&")));
+  assert.match(workerSource, /shore-window-[a-f0-9]{16}/);
+  assert.doesNotMatch(workerSource, /north-shore-window-v3/);
+  for (const moduleName of ["app.js", "tufte-browser.mjs", "route-position-projection.mjs", "route-ride-tracker.mjs"]) {
+    const source = await readFile(publicUrl(moduleName), "utf8");
+    assert.doesNotThrow(() => new Function(source.replace(/^import .*;$/gm, "").replace(/^export /gm, "")), moduleName);
+  }
+  const route = JSON.parse(await readFile(publicUrl("route.json"), "utf8"));
+  assert.ok(route.geometrySource?.url);
+  assert.ok(route.officialSource);
+  assert.ok(route.points.every((point) => point.sourceName && point.sourceUrl));
+});
+
+test("generated release manifest binds the static deployment without claiming runtime routes", async () => {
+  const manifest = JSON.parse(await readFile(publicUrl("release-manifest.json"), "utf8"));
+  assert.equal(manifest.kind, "web-release-manifest");
+  assert.equal(manifest.profile, "cloudflare-static-assets");
+  assert.deepEqual(manifest.exclusions, ["_headers", "release-manifest.json"]);
+  assert.deepEqual(manifest.metadata.runtimePaths, ["/api/route", "/healthz"]);
+  assert.ok(manifest.artifacts.some(({ path }) => path === "service-worker.js"));
+  assert.ok(manifest.artifacts.some(({ path }) => path === "route-ride-tracker.mjs"));
+  assert.ok(manifest.artifacts.every(({ path }) => !manifest.metadata.runtimePaths.includes(`/${path}`)));
+
+  const verification = await verifyWebReleaseDirectory({
+    manifest,
+    root: fileURLToPath(new URL("../public/", import.meta.url)),
+  });
+  assert.equal(verification.valid, true, JSON.stringify(verification.diagnostics));
+  assert.equal(verification.verifiedFileCount, manifest.artifactCount);
+  assert.equal(verification.excludedFileCount, 2);
+});
