@@ -19,5 +19,4 @@ printf '{"latitude":46.81,"longitude":-92.06,"accuracy":20}' |
   north-shore-window project
 ```
 
-The deployable host is a separate thin wrapper at
-`sites/north-shore-scenic-railroad-service.561.group`.
+The deployable host is a separate thin wrapper in [public publishing](../../../../../../../public-publishing-services-section/services/public-computer-publishing-services-section/services/public-system-computer-publishing-section/services/public-web-publishing-services-section/sites/north-shore-scenic-railroad-service.561.group/README.md).
