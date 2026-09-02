@@ -17,7 +17,7 @@
     "@red-cup-engineering/route-position-projection-service": "0.1.0",
     "@red-cup-engineering/static-site-conformance-service": "file:../../../../../../../../../../../engineering-services-section/services/computer-engineering-services-section/services/computer-systems-engineering-services-section/services/web-services-section/services/web-server-services-section/services/static-site-conformance-service",
     "@red-cup-engineering/web-release-candidate-service": "file:../../../../../../../../../../../engineering-services-section/services/computer-engineering-services-section/services/computer-systems-engineering-services-section/services/web-services-section/services/web-server-services-section/services/web-release-candidate-service",
-    "@red-cup-engineering/web-tufte-gui-services-section": "0.2.0",
+    "@red-cup-engineering/web-tufte-gui-services-section": "0.6.0",
     "@red-cup-engineering/linux-cloudflare-authentication-service": "0.1.1",
     "wrangler": "4.123.0"
   }
