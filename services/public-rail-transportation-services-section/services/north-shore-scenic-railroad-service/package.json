@@ -1,0 +1,34 @@
+{
+  "name": "@causeway-services/north-shore-scenic-railroad-service",
+  "version": "0.1.1",
+  "type": "module",
+  "description": "Independent offline-first North Shore scenic rail ride companion.",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/create-north-shore-window-worker.mjs",
+    "./assets": "./src/north-shore-window-assets.mjs",
+    "./client": "./src/north-shore-window-client.mjs",
+    "./ride-tracker": "./src/route-ride-tracker.mjs",
+    "./route-data": "./src/north-shore-route-data.mjs",
+    "./render": "./src/render-north-shore-window.mjs"
+  },
+  "bin": {
+    "north-shore-window": "./scripts/north-shore-window.mjs"
+  },
+  "files": [
+    "src",
+    "scripts",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@red-cup-engineering/route-position-projection-service": "0.1.0",
+    "@red-cup-engineering/web-tufte-gui-services-section": "0.6.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "sideEffects": false
+}
