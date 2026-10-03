@@ -8,7 +8,7 @@
     "workers_scripts:write",
     "zone:read"
   ],
-  "settlementDirectory": "/home/emsenn/info/lib/emsenn/services/561-group/services/public-services-section/services/public-social-services-section/services/public-transportation-services-section/services/public-rail-transportation-services-section/sites/rail-assist.561.group",
+  "settlementDirectory": ".",
   "browser": true,
   "callbackHost": "localhost",
   "callbackPort": 8976
