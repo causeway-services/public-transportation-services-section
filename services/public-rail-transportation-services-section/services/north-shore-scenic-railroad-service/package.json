@@ -5,7 +5,7 @@
   "description": "Independent offline-first North Shore scenic rail ride companion.",
   "license": "MIT",
   "exports": {
-    ".": "./src/create-north-shore-window-worker.mjs",
+    ".": "./src/render-north-shore-window.mjs",
     "./assets": "./src/north-shore-window-assets.mjs",
     "./client": "./src/north-shore-window-client.mjs",
     "./route-position": "./src/project-route-position.mjs",

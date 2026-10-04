@@ -128,14 +128,44 @@ function clearTrip() { if (!confirm("Clear the trip trace and saved moments from
 
 async function initialize() {
   connectTufteDocument();
-  state.route = await fetch("/api/route").then((response) => response.json());
+  const routeResponse = await fetch("/route.json");
+  if (!routeResponse.ok) throw new Error("Route copy unavailable");
+  state.route = await routeResponse.json();
   state.routeMeasures = state.route.coordinates.map((coordinate) => projectRoutePosition({ latitude:coordinate[1], longitude:coordinate[0], accuracy:0 }, state.route.coordinates).alongRouteMeters);
   state.points = state.route.points.map((point) => ({ ...point, measure: projectRoutePosition({ latitude:point.coordinate[1], longitude:point.coordinate[0], accuracy:0 }, state.route.coordinates).alongRouteMeters }));
   renderMap(); renderMemory();
   const initial = projectRoutePosition({ latitude:state.route.coordinates[0][1], longitude:state.route.coordinates[0][0], accuracy:0 }, state.route.coordinates); update(initial); byId("progress-readout").textContent = "Ready"; byId("progress-unit").textContent = "for departure";
   byId("check-privacy").classList.add("ready"); byId("check-privacy").textContent = "On-device only";
   if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) { byId("voice-toggle").disabled = true; byId("voice-toggle").textContent = "Narration unavailable"; }
-  if ("serviceWorker" in navigator) { try { await navigator.serviceWorker.register("/service-worker.js"); await navigator.serviceWorker.ready; byId("check-shell").classList.add("ready"); byId("check-shell").textContent = "Offline ready"; } catch { byId("check-shell").textContent = "Offline unavailable"; } }
+  try {
+    if (!("serviceWorker" in navigator)) throw new Error("Offline copies unsupported");
+    byId("check-shell").textContent = "Preparing offline copy…";
+    const registration = await navigator.serviceWorker.register("/service-worker.js");
+    const worker = registration.installing || registration.waiting || registration.active;
+    if (!worker) throw new Error("Offline copy unavailable");
+    await new Promise((resolve, reject) => {
+      const observe = () => {
+        if (worker.state === "activated" || worker.state === "redundant") {
+          worker.removeEventListener("statechange", observe);
+          worker.state === "activated" ? resolve() : reject(new Error("Offline copy failed"));
+        }
+      };
+      worker.addEventListener("statechange", observe);
+      observe();
+    });
+    if (!navigator.serviceWorker.controller) await new Promise((resolve) => {
+      const controlled = () => {
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.removeEventListener("controllerchange", controlled);
+          resolve();
+        }
+      };
+      navigator.serviceWorker.addEventListener("controllerchange", controlled);
+      controlled();
+    });
+    byId("check-shell").classList.add("ready");
+    byId("check-shell").textContent = "Offline ready";
+  } catch { byId("check-shell").textContent = "Offline unavailable"; }
 }
 
 byId("start-ride").addEventListener("click", startRide); byId("bookmark").addEventListener("click", bookmark); byId("export-trip").addEventListener("click", exportTrip); byId("clear-trip").addEventListener("click", clearTrip);
