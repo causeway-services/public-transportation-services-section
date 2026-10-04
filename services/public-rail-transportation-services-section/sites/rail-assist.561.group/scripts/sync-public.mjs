@@ -15,12 +15,10 @@ import {
 import { NORTH_SHORE_WINDOW_CLIENT } from "@causeway-services/north-shore-scenic-railroad-service/client";
 import { NORTH_SHORE_ROUTE } from "@causeway-services/north-shore-scenic-railroad-service/route-data";
 import { renderNorthShoreWindow } from "@causeway-services/north-shore-scenic-railroad-service/render";
-import { runJavascriptNodeOperation } from "@red-cup-engineering/javascript-node-services-section/operation";
 
 const siteDirectory = dirname(dirname(fileURLToPath(import.meta.url)));
 const publicDirectory = join(siteDirectory, "public");
-const baseUrl = "https://rail-assist.561.group/";
-const runtimePaths = Object.freeze(["/api/route", "/healthz"]);
+const baseUrl = "https://north-shore-scenic-railroad-service.561.group/";
 const releaseManifestPath = "release-manifest.json";
 
 const record = (body, mediaType, provenance, cacheControl) => Object.freeze({
@@ -68,9 +66,10 @@ export async function syncNorthShorePublicAssets() {
         icons: [{ src: "/icon.svg", sizes: "any", type: "image/svg+xml", purpose: "any maskable" }],
       },
       precache: {
-        includePaths: ["index.html", "app.js", "tufte-browser.mjs", "north-shore-route-position.mjs", "route-ride-tracker.mjs", "icon.svg"],
-        additionalUrls: ["/api/route"],
+        excludePaths: ["_headers", "404.html"],
       },
+      cacheNamePrefix: "north-shore-window",
+      runtimeCaching: false,
       offlineFallback: "/",
     },
   }));
@@ -86,7 +85,7 @@ export async function syncNorthShorePublicAssets() {
       baseUrl,
       profile: "cloudflare-static-assets",
       excludePaths: ["_headers"],
-      metadata: { application: "north-shore-window", runtimePaths },
+      metadata: { application: "north-shore-window" },
     },
   }));
   for (const artifact of release.artifacts) artifacts.set(artifact.path, Object.freeze({
@@ -94,7 +93,7 @@ export async function syncNorthShorePublicAssets() {
     provenance: artifact.source,
   }));
 
-  const conformance = checkStaticSiteInventory({ artifacts, manifest: release.manifest, runtimePaths });
+  const conformance = checkStaticSiteInventory({ artifacts, manifest: release.manifest });
   if (!conformance.valid) throw new Error(`static conformance failed:\n${JSON.stringify(conformance.diagnostics, null, 2)}`);
 
   // public/ is an ignored generated overlay; recreate it so stale files cannot
@@ -119,6 +118,6 @@ export async function syncNorthShorePublicAssets() {
 }
 
 if (import.meta.main) {
-  const result = await runJavascriptNodeOperation({ name: "sync-public", description: "Materialize and locally verify the deployment carrier's complete static release.", operation: syncNorthShorePublicAssets }, { arguments: process.argv.slice(2), standardInput: process.stdin, standardOutput: process.stdout });
-  process.exitCode = result.exitCode;
+  const receipt = await syncNorthShorePublicAssets();
+  console.log(JSON.stringify({ files: receipt.files, verified: receipt.directoryVerification.valid }));
 }

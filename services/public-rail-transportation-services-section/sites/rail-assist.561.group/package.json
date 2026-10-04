@@ -2,7 +2,7 @@
   "name": "@causeway-services/rail-assist.561.group",
   "version": "0.1.1",
   "type": "module",
-  "description": "Cloudflare deployment carrier for rail-assist.561.group; contains no application logic.",
+  "description": "Static publication of the private North Shore Window field guide at north-shore-scenic-railroad-service.561.group.",
   "scripts": {
     "pretest": "node scripts/sync-public.mjs",
     "test": "node --test test/*.test.mjs",
@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@causeway-services/north-shore-scenic-railroad-service": "0.1.1",
-    "@red-cup-engineering/javascript-node-services-section": "0.3.0",
     "@red-cup-engineering/linux-cloudflare-authentication-service": "0.1.1",
     "@red-cup-engineering/static-site-conformance-service": "0.1.1",
     "@red-cup-engineering/web-release-candidate-service": "0.3.0",
