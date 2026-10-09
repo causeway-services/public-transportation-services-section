@@ -35,6 +35,8 @@ function initialArtifacts() {
     ["icon.svg", record(NORTH_SHORE_WINDOW_ICON, "image/svg+xml", "north-shore-window:assets")],
     ["route.json", record(`${JSON.stringify(NORTH_SHORE_ROUTE)}\n`, "application/json; charset=utf-8", "north-shore-window:route-data")],
     ["_headers", record(NORTH_SHORE_WINDOW_HEADERS, "text/plain; charset=utf-8", "north-shore-window:cloudflare-carrier")],
+    ["robots.txt", record(`User-agent: *\nAllow: /\n\nSitemap: ${baseUrl}sitemap.xml\n`, "text/plain; charset=utf-8", "north-shore-window:crawler")],
+    ["sitemap.xml", record(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${baseUrl}</loc></url>\n</urlset>\n`, "application/xml; charset=utf-8", "north-shore-window:crawler")],
     ["404.html", record("<!doctype html><title>Not found</title><p>Not found.</p>\n", "text/html; charset=utf-8", "north-shore-window:cloudflare-carrier")],
     ["north-shore-route-position.mjs", record(readFileSync(fileURLToPath(import.meta.resolve("@causeway-services/north-shore-scenic-railroad-service/route-position"))), "text/javascript; charset=utf-8", "north-shore-window:route-position")],
     ["route-ride-tracker.mjs", record(readFileSync(fileURLToPath(import.meta.resolve("@causeway-services/north-shore-scenic-railroad-service/ride-tracker"))), "text/javascript; charset=utf-8", "north-shore-window:ride-tracker")],
