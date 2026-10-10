@@ -16,7 +16,7 @@
     "@red-cup-engineering/linux-cloudflare-authentication-service": "0.1.1",
     "@red-cup-engineering/static-site-conformance-service": "0.1.1",
     "@red-cup-engineering/web-release-candidate-service": "0.3.0",
-    "@red-cup-engineering/web-page-tiling-engine": "0.12.0",
+    "@red-cup-engineering/web-page-tiling-engine": "0.14.0",
     "wrangler": "4.123.0",
     "@red-cup-engineering/computer-systems-publishing-engineering-services-section": "0.1.0"
   }
