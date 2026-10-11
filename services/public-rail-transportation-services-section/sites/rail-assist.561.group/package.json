@@ -1,0 +1,23 @@
+{
+  "name": "@causeway-services/rail-assist.561.group",
+  "version": "0.1.1",
+  "type": "module",
+  "description": "Static publication of the private North Shore Window field guide at north-shore-scenic-railroad-service.561.group.",
+  "scripts": {
+    "pretest": "node scripts/sync-public.mjs",
+    "test": "node --test test/*.test.mjs",
+    "authenticate": "authenticate-linux-colony-with-cloudflare content/deployment/cloudflare-authentication-request.json",
+    "predeploy": "node scripts/sync-public.mjs",
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "dependencies": {
+    "@causeway-services/north-shore-scenic-railroad-service": "workspace:*",
+    "@red-cup-engineering/linux-cloudflare-authentication-service": "workspace:*",
+    "@red-cup-engineering/static-site-conformance-service": "workspace:*",
+    "@red-cup-engineering/web-release-candidate-service": "workspace:*",
+    "@red-cup-engineering/web-page-tiling-engine": "workspace:*",
+    "wrangler": "4.123.0",
+    "@red-cup-engineering/computer-systems-publishing-engineering-services-section": "workspace:*"
+  }
+}
