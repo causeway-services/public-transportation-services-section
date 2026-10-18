@@ -3,6 +3,11 @@
   "version": "0.1.1",
   "type": "module",
   "description": "Independent offline-first North Shore scenic rail ride companion.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/causeway-services/public-services-section.git",
+    "directory": "services/public-social-services-section/services/public-transportation-services-section/services/public-rail-transportation-services-section/services/north-shore-scenic-railroad-service"
+  },
   "license": "MIT",
   "exports": {
     ".": "./src/render-north-shore-window.mjs",
