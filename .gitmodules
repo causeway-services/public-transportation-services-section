@@ -1,0 +1,4 @@
+[submodule "public-rail-transportation-services-section"]
+	path = services/public-rail-transportation-services-section
+	url = https://github.com/causeway-services/public-rail-transportation-services-section.git
+	branch = main
