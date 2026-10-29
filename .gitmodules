@@ -1,7 +1,0 @@
-[submodule "services/public-social-services-section/services/public-education-services-section"]
-	path = services/public-education-services-section
-	url = https://github.com/causeway-services/public-education-services-section.git
-[submodule "public-transportation-services-section"]
-	path = services/public-transportation-services-section
-	url = https://github.com/causeway-services/public-transportation-services-section.git
-	branch = main
