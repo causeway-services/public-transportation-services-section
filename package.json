@@ -1,0 +1,10 @@
+{
+  "name": "@causeway-services/public-transportation-services-section",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/causeway-services/public-transportation-services-section.git"
+  },
+  "description": "Public transportation services section.",
+  "license": "Apache-2.0"
+}
